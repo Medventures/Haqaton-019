@@ -1,0 +1,46 @@
+# Хатшы целиком: интерфейс, сервер, локальная модель и демо-МИС.
+# Запуск: docker compose up --build, затем http://localhost:8080
+# Наружу, в интернет, ни один сервис не обращается.
+services:
+  frontend:
+    build: { context: ., dockerfile: frontend/Dockerfile }
+    ports: ["${UI_PORT:-8080}:80"]
+    depends_on: [backend]
+
+  backend:
+    build: { context: ., dockerfile: backend/Dockerfile }
+    environment:
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+      LLM_MODEL: ${LLM_MODEL:-qwen3:4b}
+      LLM_MODEL_KK: ${LLM_MODEL_KK:-gemma3:4b}
+      WHISPER_MODEL_KK: /models/ggml-whisper-turbo-ksc2.bin
+      MIS_URL: ${MIS_URL:-http://mis:8100}
+      HATSHY_ORG: ${HATSHY_ORG:-}
+    volumes:
+      - hatshy-data:/data
+      - ${WHISPER_MODELS_DIR:-./models}:/models:ro
+    depends_on: [ollama, mis]
+
+  # Локальная языковая модель. Данные приёма не покидают этот контейнер.
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ${OLLAMA_MODELS_DIR:-ollama-models}:/root/.ollama/models
+
+  # Один раз скачивает модель, если её ещё нет, и завершается.
+  model-pull:
+    image: ollama/ollama:latest
+    environment: { OLLAMA_HOST: "http://ollama:11434" }
+    entrypoint: ["/bin/sh", "-c", "sleep 3; for m in ${LLM_MODEL:-qwen3:4b} ${LLM_MODEL_KK:-gemma3:4b}; do ollama list | grep -q \"$$m\" || ollama pull $$m; done"]
+    depends_on: [ollama]
+    restart: "no"
+
+  mis:
+    build: { context: ., dockerfile: mis/Dockerfile }
+    ports: ["${MIS_PORT:-8100}:8100"]
+    volumes: [mis-data:/data]
+
+volumes:
+  hatshy-data:
+  ollama-models:
+  mis-data:

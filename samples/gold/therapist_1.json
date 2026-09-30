@@ -1,0 +1,22 @@
+{
+  "audio": "samples/therapist_1.wav",
+  "template": "therapist",
+  "language": "ru",
+  "patient": "Нурланова Айгерим",
+  "visit_date": "2026-09-30",
+  "note": "запись синтезирована голосом компьютера по сценарию samples/therapist_1.txt",
+  "fields": {
+    "complaints": ["горл", "трет", "38,5", "слабост"],
+    "anamnesis_morbi": ["парацетамол"],
+    "anamnesis_vitae": ["хроническ", "2019", "аппендицит"],
+    "allergies": ["пенициллин"],
+    "vitals": {"bp": "120/80", "pulse": "88", "temperature": "38,2", "spo2": "97"},
+    "status": ["миндалин", "налет", "лимфоузл", "хрипов нет"],
+    "diagnosis": {"facts": ["тонзиллит"], "icd": "J03.9"},
+    "plan": ["мазок", "анализ крови"],
+    "prescriptions": [{"drug": "амоксициллин", "dose": "500"}, {"drug": "ибупрофен", "dose": "400"}],
+    "recommendations": ["пить", "полоска"],
+    "follow_up": "2026-10-03"
+  },
+  "warnings": ["prescriptions"]
+}

@@ -1,10 +1,25 @@
+# секреты и локальные настройки
 .env
 .env.*
 !.env.example
+
+# зависимости и сборка
 node_modules/
 venv/
 .venv/
+.venv-tools/
 __pycache__/
 *.py[cod]
+frontend/dist/
+
+# данные приёмов и записи: в репозиторий не попадают
+data/
+mis/data/
+
+# модели и тяжёлые файлы
+models/*.bin
+samples/*.wav
+video_build/
+
 .DS_Store
 Thumbs.db

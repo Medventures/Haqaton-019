@@ -1,0 +1,8 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+requests>=2.32
+python-docx>=1.1
+natasha>=1.6
+setuptools<81
+rapidfuzz>=3.9

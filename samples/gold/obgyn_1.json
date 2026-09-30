@@ -1,0 +1,27 @@
+{
+  "audio": "samples/obgyn_1.wav",
+  "template": "obgyn",
+  "language": "ru",
+  "patient": "Сарсенбаева Дана",
+  "visit_date": "2026-09-30",
+  "note": "запись синтезирована голосом компьютера по сценарию samples/obgyn_1.txt",
+  "fields": {
+    "complaints": ["живот", "отека"],
+    "menstrual": ["13", "28", "5 дн", "регулярн"],
+    "lmp": "2026-04-10",
+    "obstetric": ["втор", "2022", "аборт"],
+    "gyn_history": [],
+    "anamnesis_vitae": ["хроническ"],
+    "allergies": ["нет"],
+    "vitals": {"bp": "110/70", "pulse": "78", "weight": "68", "weight_gain": "6",
+               "fundal_height": "24", "abdomen": "88", "fetal_hr": "142"},
+    "status": ["тонус", "пастозност"],
+    "diagnosis": {"facts": ["беременност", "24"], "icd": "Z34"},
+    "plan": ["анализ крови", "анализ мочи", "глюкоз"],
+    "prescriptions": [{"drug": "магн", "dose": "2"}, {"drug": "йодомарин", "dose": "200"}],
+    "recommendations": ["отдыха", "сол"],
+    "follow_up": "2026-10-14"
+  },
+  "computed": {"pregnancy_weeks": 24, "pregnancy_days": 5, "edd": "2027-01-15"},
+  "warnings": []
+}

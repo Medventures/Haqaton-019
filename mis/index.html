@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Демо-МИС клиники</title>
+<style>
+  :root { --ink:#1a2230; --muted:#3d4759; --line:#d5dae3; --bg:#edeff3; --accent:#2f4aa0; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+  header { background:#1f2a3a; color:#fff; padding:14px 24px; display:flex; gap:14px; align-items:center; }
+  header b { font-size:18px; }
+  header span { background:#3a4a63; padding:3px 10px; border-radius:999px; font-size:12px; }
+  header a { color:#fff; margin-left:auto; font-size:14px; }
+  main { display:grid; grid-template-columns: 360px minmax(0,1fr); gap:20px; padding:20px 24px; }
+  @media (max-width: 800px) { main { grid-template-columns: 1fr; } }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; }
+  h2 { margin:0 0 12px; font-size:16px; }
+  button.row { display:flex; width:100%; gap:10px; align-items:center; text-align:left; font:inherit; color:inherit;
+    background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px; cursor:pointer; }
+  button.row.on { border:2px solid var(--accent); background:#e6eaf8; padding:9px 11px; }
+  .time { font-family: ui-monospace, Menlo, monospace; font-size:13px; }
+  .ok { margin-left:auto; background:#ddf0e6; color:#0a5446; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:600; }
+  .muted { color:var(--muted); font-size:13px; }
+  pre { margin:0; background:#1f2a3a; color:#e4e9f2; border-radius:10px; padding:16px; font-size:13px; line-height:1.55;
+    overflow:auto; white-space:pre-wrap; word-break:break-word; }
+  .empty { color:var(--muted); padding:24px 0; }
+</style>
+</head>
+<body>
+<header><b>МИС клиники</b><span>демо-сервис для прототипа</span><a href="/docs">Описание API</a></header>
+<main>
+  <div class="card">
+    <h2>Принятые листы консультаций</h2>
+    <div id="list"><div class="empty">Пока ничего не принято.</div></div>
+  </div>
+  <div class="card">
+    <h2 id="title">Лист</h2>
+    <pre id="body">Выберите лист слева.</pre>
+  </div>
+</main>
+<script>
+let items = [], current = null;
+function show(id) {
+  current = id;
+  const s = items.find(x => x.id === id);
+  document.getElementById('title').textContent =
+    'POST /api/v1/consultations, принят ' + s.received_at.replace('T', ' ');
+  document.getElementById('body').textContent = JSON.stringify(s, null, 2);
+  render();
+}
+function render() {
+  const list = document.getElementById('list');
+  if (!items.length) return;
+  list.innerHTML = '';
+  for (const s of items) {
+    const b = document.createElement('button');
+    b.className = 'row' + (s.id === current ? ' on' : '');
+    b.onclick = () => show(s.id);
+    const t = document.createElement('span'); t.className = 'time';
+    t.textContent = s.received_at.slice(11, 16);
+    const mid = document.createElement('span');
+    const name = document.createElement('div'); name.textContent = (s.patient || {}).name || 'Пациент';
+    const sub = document.createElement('div'); sub.className = 'muted';
+    sub.textContent = ((s.encounter || {}).position || '') + ((s.diagnosis || {}).icd10 ? ', ' + s.diagnosis.icd10 : '');
+    mid.append(name, sub);
+    const ok = document.createElement('span'); ok.className = 'ok'; ok.textContent = 'принят';
+    b.append(t, mid, ok);
+    list.append(b);
+  }
+}
+async function load() {
+  items = await (await fetch('/api/v1/consultations')).json();
+  if (items.length && current === null) show(items[0].id); else render();
+}
+load(); setInterval(load, 3000);
+</script>
+</body>
+</html>
