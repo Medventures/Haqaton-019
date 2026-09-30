@@ -726,11 +726,11 @@ textarea:focus-visible {
   padding: 16px 18px;
 }
 .field .card-head {
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: flex-start;
 }
 .field .card-head h3 {
-  flex: 1 1 auto;
+  flex: 1 1 9em;
   min-width: 0;
   padding-top: 4px;
 }
